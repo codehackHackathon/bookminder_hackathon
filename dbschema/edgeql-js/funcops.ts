@@ -337,20 +337,20 @@ function getDescendantNames(typeSpec: introspect.Types, typeId: string) {
   if (descendantCache.has(typeId)) {
     return descendantCache.get(typeId)!
   }
-  const descendants: string[] = Array.from(
-    new Set(
+  const descendants: string[] = [
+    ...new Set(
       [...typeSpec.values()]
         .filter(
           (type) =>
-            type.kind === 'scalar' && type.bases.some(({ id }) => id === typeId)
+            type.kind === "scalar" && type.bases.some(({ id }) => id === typeId)
         )
         .flatMap((type) =>
           type.is_abstract
             ? getDescendantNames(typeSpec, type.id)
             : [nameRemapping[type.name]!, type.name]
         )
-    )
-  )
+    ),
+  ];
   descendantCache.set(typeId, descendants)
   return descendants
 }
